@@ -1,6 +1,6 @@
 {
   "name": "discord-makepdf",
-  "version": "1.5.2",
+  "version": "1.5.2-migration",
   "description": "",
   "main": "makepdf.js",
   "scripts": {

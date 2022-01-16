@@ -6,6 +6,14 @@
       "node_args": "--experimental-json-modules"
     },
     {
+      "name": "makepdf legacy",
+      "script": "./MakePDF/makepdf.js",
+      "node_args": "--experimental-json-modules",
+      "env": {
+        "LEGACY": "true"
+      }
+    },
+    {
       "name": "voicenotify",
       "script": "./VoiceNotify/voicenotify.js",
       "node_args": "--experimental-json-modules"

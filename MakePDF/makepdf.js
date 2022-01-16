@@ -6,7 +6,10 @@ import { get, request } from 'https'
 import { convert } from './convert.js'
 import info from './package.json'
 const client = new Client()
-const hook = new WebhookClient(process.env.MAKEPDF_WEBHOOK_ID, process.env.MAKEPDF_WEBHOOK_TOKEN)
+const hook = new WebhookClient(
+  process.env.LEGACY ? process.env.MAKEPDF_WEBHOOK_ID_LEGACY : process.env.MAKEPDF_WEBHOOK_ID,
+  process.env.LEGACY ? process.env.MAKEPDF_WEBHOOK_TOKEN_LEGACY : process.env.MAKEPDF_WEBHOOK_TOKEN
+)
 
 const log = (msg) => {
   console.log(msg)
@@ -65,7 +68,18 @@ client.on('message', async (msg) => {
 
             const newName = name.substring(0, name.lastIndexOf('.')) + '.pdf'
             const newAttachment = new MessageAttachment(pdfData, newName)
-            channel.send(`**:paperclip: Here is your converted PDF file :**`, newAttachment)
+            channel.send(`**:paperclip: Here is your converted PDF file :**`, newAttachment).then(() => {
+              process.env.LEGACY &&
+                channel.send(
+                  new MessageEmbed()
+                    .setTitle('Attention MakePDF users')
+                    .setColor('#ED4539')
+                    .setDescription(
+                      `Starting from May 1st 2022, this bot will be discontinued\n\n**[Please click here to add the new bot, and keep using its features](https://discord.com/oauth2/authorize?client_id=932278614911766599&scope=bot&permissions=52224)**\n\n(All features are the same, this is only a technicality to go through Discord's review process again, as it does not allow for appeal)\n\nThank you for using our free & open-source MakePDF bot ❤️`
+                    )
+                    .setThumbnail('https://github.com/vpctorr/DiscordBots/raw/main/MakePDF/logo.png')
+                )
+            })
           })
         })
       })
@@ -77,11 +91,11 @@ const updateGuildCount = (server_count) => {
   request({
     hostname: 'top.gg',
     port: 443,
-    path: `/api/bots/${process.env.MAKEPDF_BOT_ID}/stats`,
+    path: `/api/bots/${process.env.LEGACY ? process.env.MAKEPDF_BOT_ID_LEGACY : process.env.MAKEPDF_BOT_ID}/stats`,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `${process.env.MAKEPDF_TOPGG_TOKEN}`
+      Authorization: `${process.env.LEGACY ? process.env.MAKEPDF_TOPGG_TOKEN_LEGACY : process.env.MAKEPDF_TOPGG_TOKEN}`
     }
   }).end(
     JSON.stringify({
@@ -103,4 +117,4 @@ process.on(
   (e) => e.code != 50013 && e.code != 50001 && log(`Unhandled promise rejection:\n\n${e.stack}\n\n${JSON.stringify(e)}`)
 )
 
-client.login(process.env.MAKEPDF_DISCORD_TOKEN)
+client.login(process.env.LEGACY ? process.env.MAKEPDF_DISCORD_TOKEN_LEGACY : process.env.MAKEPDF_DISCORD_TOKEN)

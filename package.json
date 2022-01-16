@@ -1,6 +1,6 @@
 {
   "name": "discordbots",
-  "version": "1.5.2",
+  "version": "1.5.2-migration",
   "description": "",
   "scripts": {
     "postinstall": "cd MakePDF && npm install && cd ../VoiceNotify && npm install",
